@@ -1,10 +1,10 @@
 #------------------------------------------------
-#' Model Parameter List Creation for MEtapopulation model
+#' Model Parameter List Creation for Metapopulation model
 #'
 #' \code{model_param_list_create_metapop} creates list of model parameters to be used
 #' within \code{equilibrium_init_create_metapop}
 #'
-#' @param eta Death rate for expoential population distribtuion, i.e. 1/Mean Population Age. Default = 0.0001305
+#' @param eta Death rate for exponential population distribution, i.e. 1/Mean Population Age. Default = 0.0001305
 #' @param rho Age-dependent biting parameter. Default = 0.85
 #' @param a0 Age-dependent biting parameter. Default = 2920
 #' @param sigma2 Variance of the log heterogeneity in biting rates. Default = 1.67
@@ -79,7 +79,7 @@
 #' @param ... Any other parameters needed for non-standard model. If they share the same name
 #' as any of the defined parameters \code{model_param_list_create_metapop} will stop. You can either write
 #' any extra parameters you like individually, e.g. model_param_list_create(extra1 = 1, extra2 = 2)
-#' and these parameteres will appear appended to the returned list, or you can pass explicitly
+#' and these parameters will appear appended to the returned list, or you can pass explicitly
 #' the ellipsis argument as a list created before, e.g. model_param_list_create(...=list(extra1 = 1, extra2 = 2))
 #'
 #' @export
@@ -92,21 +92,21 @@ model_param_list_create_metapop <- function(
   a0 = 2920,
   sigma2 = 1.67,
   max_age = 100*365,
-  #  rate of leaving infection states
+  # rate of leaving infection states
   rA = 1/195,
   rT = 0.2,
   rD = 0.2,
   rU = 1/110.299,
   rP = 1/15,
-  #  human latent period and time lag from asexual parasites to
+  # human latent period and time lag from asexual parasites to
   dE  = 12,
   delayGam = 12.5,
   # human infectiousness to mosquitoes
-  cD  = 0.0676909,
-  cT  =  0.322 * cD,
-  cU  = 0.006203,
+  cD = 0.0676909,
+  cT = 0.322 * cD,
+  cU = 0.006203,
   gamma1  = 1.82425,
-  #  Immunity reducing probability of detection
+  # immunity reducing probability of detection
   d1 = 0.160527,
   dID = 3650,
   ID0 = 1.577533,
@@ -117,14 +117,14 @@ model_param_list_create_metapop <- function(
   gammaD = 4.8183,
   alphaA = 0.75735,
   alphaU = 0.185624,
-  # Immunity reducing probability of infection
+  # immunity reducing probability of infection
   b0 = 0.590076,
   b1 = 0.5,
   dB = 3650,
   IB0 = 43.8787,
   kB = 2.15506,
   uB = 7.19919,
-  # Immunity reducing probability of clinical disease
+  # immunity reducing probability of clinical disease
   phi0 = 0.791666,
   phi1 = 0.000737,
   dCA = 10950,
@@ -164,18 +164,18 @@ model_param_list_create_metapop <- function(
   r_ITN1 = 0.24,
   r_IRS0 = 0.6,
   d_IRS0 = 1,
-  irs_half_life =   0.5 * DY,
-  itn_half_life =   2.64 * DY,
-  IRS_interval =   1 * DY,
-  ITN_interval =   3 * DY,
-  np = 1,
+  irs_half_life = 0.5 * DY,
+  itn_half_life = 2.64 * DY,
+  IRS_interval = 1 * DY,
+  ITN_interval = 3 * DY,
+  np = 1, # default number of patches = 1
   ...
 
 ){
   # set up param list
   mp_list <- list()
 
-  # catach extra params and place in list
+  # catch extra params and place in list
   extra_param_list <- list(...)
   if(length(extra_param_list)>0){
     if(is.list(extra_param_list[[1]])){
@@ -213,7 +213,7 @@ model_param_list_create_metapop <- function(
   mp_list$cU <- cU
   mp_list$gamma1 <- gamma1
 
-  # Immunity reducing probability of detection
+  # immunity reducing probability of detection
   mp_list$d1 <- d1
   mp_list$dID <- dID
   mp_list$ID0 <- ID0
@@ -304,7 +304,7 @@ model_param_list_create_metapop <- function(
   }
 
   mp_list$cov <- cov
-  mp_list$np <- np
+  mp_list$np <- np # number of patches
 
   mp_list$d_ITN0 <- d_ITN0
   mp_list$r_ITN0 <- r_ITN0

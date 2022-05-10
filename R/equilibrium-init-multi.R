@@ -4,7 +4,7 @@
 #' \code{equilibrium_init_multi} creates an equilibrium initialisation state to be
 #' used within later model runs
 #' @param age_vector Vector of age brackets.
-#' @param het_brackets Integer number of biting heteogenity compartments.
+#' @param het_brackets Integer number of biting heterogeneity compartments.
 #' @param country String for country of interest. If NULL the seasonal parameters
 #' will attempt to be loaded using just the admin unit, however if there is ambiguity
 #' in the admin unit an error will be thrown. If both NULL then no seasonality is
@@ -34,9 +34,9 @@ equilibrium_init_multi <- function (age_vector, het_brackets,
   na <- as.integer(length(age))  # number of age groups
   nh <- as.integer(het_brackets)  # number of heterogeneity groups
   num_int <- model_param_list$num_int
-  np <- model_param_list$np
+  np <- model_param_list$np # number of patches
 
-  ## Create 4th dimenstion arrays for humans initial conditions
+  ## Create 4th dimension arrays for humans initial conditions
   S <-  array(0, c(na,nh,num_int,np))
   Tt <- array(0,c(na,nh,num_int,np))
   D <-  array(0, c(na,nh,num_int,np))
@@ -47,7 +47,7 @@ equilibrium_init_multi <- function (age_vector, het_brackets,
   ID <-  array(0, c(na,nh,num_int,np))
   ICA <-  array(0, c(na,nh,num_int,np))
   ICM <-  array(0, c(na,nh,num_int,np))
-  # Create 1 dimension array for mosquitos initial condition
+  # Create 1 dimension array for mosquitoes initial condition
   Iv <- vector(mode="numeric", length=np)
   Sv <- vector(mode="numeric", length=np)
   Ev <- vector(mode="numeric", length=np)
@@ -64,7 +64,7 @@ equilibrium_init_multi <- function (age_vector, het_brackets,
 
   cov <- model_param_list$cov
   temp_param_list <- model_param_list
-  # Adding the fourth dimmension
+  # Adding the fourth dimension
   for (i in 1:length(EIR_vector)){
 
 

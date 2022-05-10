@@ -590,18 +590,30 @@ dim(den) <- na
 age59 <- user(integer=TRUE)
 # index of the age vector above 5 years
 age05 <- user(integer=TRUE)
+# index of the age vector at 2 years
+age02 <- user(integer=TRUE)
+# index of the age vector at 10 years
+age10 <- user(integer=TRUE)
 
+# slide positivity in 0 -5 year age bracket
 dim(prev0to59) <- c(age59,nh,num_int,np)
 prev0to59[1:age59,,,] <- T[i,j,k,l] + D[i,j,k,l]  + A[i,j,k,l]*p_det[i,j,k,l]
 output(prev[]) <- sum(prev0to59[,,,i])/sum(den[1:age59])
-dim(prev) <-np
+dim(prev) <- np
 
-# slide positivity in 0 -5 year age bracket
+# Slide positivity in 2-10 year age bracket
+dim(prev0to10) <- c(age10,nh,num_int,np)
+prev0to10[1:age10,,,] <- T[i,j,k,l] + D[i,j,k,l]  + A[i,j,k,l]*p_det[i,j,k,l]
+output(prev2to10[]) <- sum(prev0to10[age02:age10,,,i])/sum(den[age02:age10])
+dim(prev2to10) <- np
+
+# Clinical incidence
 dim(clin_inc0to5) <- c(age05,nh,num_int,np)
 clin_inc0to5[1:age05,,,] <- clin_inc[i,j,k,l]
 output(inc05[]) <- sum(clin_inc0to5[,,,i])/sum(den[1:age05])
 dim(inc05) <- np
-output(inc) <- sum(clin_inc[,,,])
+output(inc[]) <- sum(clin_inc[,,,i])
+dim(inc) <- np
 
 # Param checking outputs
 output(mu[]) <- mu
