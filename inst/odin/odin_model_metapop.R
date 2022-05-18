@@ -237,9 +237,10 @@ FOI[,,,] <- delay(FOI_lag[i,j,k,l],dE)
 # infectious mosquitoes
 #
 dim(mix) <- c(np,np)
-mix[,] <- user()                 #  Strength of transmission between populations (patches)
+mix[,] <- user()                 #  Strength of transmission between populations
+
 dim(rows) <- c(np,np)
-rows[,] <- mix[i,j]*Iv[j]
+rows[,] <- mix[i,j]*Iv[j]        # mix mosquitoes (how neighboring will affect primary)
 
 
 dim(foi_age) <- na
@@ -327,6 +328,7 @@ lag_FOIv[]=sum(FOIvijk[,,,i])
 dim(lag_mix_FOIv) <- np
 dim(rows_v) <- c(np,np)
 rows_v[,] <- mix[i,j]*lag_FOIv[j]
+# but the force of infection in humans has two components - FOIv
 lag_mix_FOIv[] <- sum(rows_v[i,])
 
 # Current hum->mos FOI depends on the number of individuals now producing gametocytes (12 day lag)

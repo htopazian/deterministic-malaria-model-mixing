@@ -61,7 +61,8 @@ run_model_metapop <- function(model = "odin_model_metapop",
     message(sprintf("t: %f, y:[%s], y: [%s] \n", t, y, any(y<0),
                     paste(format(y, 5), collapse = " -- ")))
   }
-  mod_run <- mod$run(tt, verbose= TRUE)
+  mod_run <- mod$run(tt, verbose= TRUE, step_size_max=7)
+  # step_size_min = 3*10^-10, step_size_initial=7*10^-1, method ="dopri5"
 
   # shape output
   out <- mod$transform_variables(mod_run)
