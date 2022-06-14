@@ -450,13 +450,12 @@ deriv(PL[1:np]) <- LL[i]/dLL - muPL*PL[i] - PL[i]/dPL
 # See supplementary materials S2 from http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1000324#s6
 
 # general parameters
-#dim(ITN_IRS_on) <- np
-#dim(num_int) <- np
 dim(itn_cov) <- np
 dim(irs_cov) <- np
 
 
-ITN_IRS_on <- user() # days after which interventions begin
+ITN_on <- user() # days after which ITN intervention begins
+IRS_on <- user() # days after which IRS intervention begins
 num_int <- user() # number of intervention categories, ITN only, IRS only, neither, both
 itn_cov[] <- user() # proportion of population covered by ITN
 irs_cov[] <- user() # proportion of population covered by IRS
@@ -493,20 +492,20 @@ irs_loss <- user()
 itn_loss <- user()
 
 # Calculates decay for ITN/IRS
-ITN_decay = if(t < ITN_IRS_on) 0 else exp(-((t-ITN_IRS_on)%%ITN_interval) * itn_loss)
-IRS_decay = if(t < ITN_IRS_on) 0 else exp(-((t-ITN_IRS_on)%%IRS_interval) * irs_loss)
+ITN_decay = if(t < ITN_on) 0 else exp(-((t-ITN_on)%%ITN_interval) * itn_loss)
+IRS_decay = if(t < IRS_on) 0 else exp(-((t-IRS_on)%%IRS_interval) * irs_loss)
 
-# The r,d and s values turn on after ITN_IRS_on and decay accordingly
-d_ITN <- if(t < ITN_IRS_on) 0 else d_ITN0*ITN_decay
-r_ITN <- if(t < ITN_IRS_on) 0 else r_ITN1 + (r_ITN0 - r_ITN1)*ITN_decay
-s_ITN <- if(t < ITN_IRS_on) 1 else 1 - d_ITN - r_ITN
+# The r,d and s values turn on after ITN_on or IRS_on and decay accordingly
+d_ITN <- if(t < ITN_on) 0 else d_ITN0*ITN_decay
+r_ITN <- if(t < ITN_on) 0 else r_ITN1 + (r_ITN0 - r_ITN1)*ITN_decay
+s_ITN <- if(t < ITN_on) 1 else 1 - d_ITN - r_ITN
 
-r_IRS <- if(t < ITN_IRS_on) 0 else r_IRS0*IRS_decay
-d_IRS <- if(t < ITN_IRS_on) 0 else chi*d_IRS0*IRS_decay
-s_IRS <- if(t < ITN_IRS_on) 1 else 1 - d_IRS
+r_IRS <- if(t < IRS_on) 0 else r_IRS0*IRS_decay
+d_IRS <- if(t < IRS_on) 0 else chi*d_IRS0*IRS_decay
+s_IRS <- if(t < IRS_on) 1 else 1 - d_IRS
 
 # probability that mosquito bites and survives for each intervention category
-dim(w_) <- 4
+dim(w_) <-np # c(4,np)
 w_[1] <- 1
 w_[2] <- 1 - bites_Bed + bites_Bed*s_ITN
 w_[3] <- 1 - bites_Indoors + bites_Indoors*(1-r_IRS)*s_IRS
@@ -539,8 +538,10 @@ zhi[1:num_int,1:np] <- cov[i,j]*z[i]
 whi[1:num_int,1:np] <- cov[i,j]*w[i]
 dim(zh) <- np
 dim(wh) <- np
-zh[1:np] <-if(t < ITN_IRS_on) 0 else sum(zhi[,i])
-wh[1:np] <-if(t < ITN_IRS_on) 1 else sum(whi[,i])
+zh[1:np] <- if(t < ITN_on) 0 else sum(zhi[,i])
+wh[1:np] <- if(t < ITN_on) 1 else sum(whi[,i])
+zh[1:np] <- if(t < IRS_on) 0 else sum(zhi[,i])
+wh[1:np] <- if(t < IRS_on) 1 else sum(whi[,i])
 # Z (zbar) - average probability of mosquito trying again during single feeding attempt
 dim(zbar) <- np
 zbar[1:np] <- Q0*zh[i]

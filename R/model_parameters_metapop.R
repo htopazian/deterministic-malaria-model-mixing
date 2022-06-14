@@ -65,7 +65,8 @@
 #' @param num_int Number of intervention parameters.  Default = 4
 #' @param itn_cov The proportion of people that use an ITN. Default = 0
 #' @param irs_cov The proportion of people living in houses that have been sprayed. Default = 0
-#' @param ITN_IRS_on Time of ITN and IRS to be activated. Default = -1, i.e. never.
+#' @param ITN_on Time of ITN to be activated. Default = -1, i.e. never.
+#' @param IRS_on Time of IRS to be activated. Default = -1, i.e. never.
 #' @param DY Duration of year (days). Default = 365
 #' @param d_ITN0 Probability of dying with an encounter with ITN (max). Default = 0.41
 #' @param r_ITN0 Probability of repeating behaviour with ITN (max). Default = 0.56
@@ -157,7 +158,8 @@ model_param_list_create_metapop <- function(
   num_int = 1,
   itn_cov = 0,
   irs_cov = 0,
-  ITN_IRS_on = -1,
+  IRS_on = -1,
+  ITN_on = -1,
   DY = 365,
   d_ITN0 = 0.41,
   r_ITN0 = 0.56,
@@ -293,7 +295,8 @@ model_param_list_create_metapop <- function(
   }
 
   # Sets start time of coverage
-  mp_list$ITN_IRS_on <- ITN_IRS_on
+  mp_list$ITN_on <- ITN_on
+  mp_list$IRS_on <- IRS_on
 
   # Sets population split as coverage
   # {No intervention} {ITN only} {IRS only} {Both ITN and IRS}
