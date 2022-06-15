@@ -32,15 +32,15 @@ run_model_metapop <- function(model = "odin_model_metapop",
                               time = 100,
                               ...){
 
-  np<- length(init_EIR)
+  np <- length(init_EIR)
 
   ## create model param list using necessary variables
   xx <- model_param_list_create_metapop (np = np,...)
 
   # generate initial state variables from equilibrium solution
 
-  state <- equilibrium_init_multi(age_vector=age, EIR_vector=init_EIR,ft=init_ft,
-                                   model_param_list =xx, het_brackets=het_brackets,
+  state <- equilibrium_init_multi(age_vector = age, EIR_vector = init_EIR,ft = init_ft,
+                                   model_param_list = xx, het_brackets = het_brackets,
                                    country = country,
                                    admin_unit = admin2)
   # create odin generator
@@ -62,8 +62,8 @@ run_model_metapop <- function(model = "odin_model_metapop",
   #                   paste(format(y, 5), collapse = " -- ")))
   # }
   mod_run <- mod$run(tt,
-                     # verbose= TRUE,
-                     step_size_max=7)
+                     # verbose = TRUE,
+                     step_size_max = 7)
   # step_size_min = 3*10^-10, step_size_initial=7*10^-1, method ="dopri5"
 
   # shape output

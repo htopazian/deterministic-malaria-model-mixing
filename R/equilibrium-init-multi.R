@@ -27,7 +27,8 @@
 #'
 equilibrium_init_multi <- function (age_vector, het_brackets,
                                     country = NULL, admin_unit = NULL, ft,
-                                    EIR_vector, model_param_list){
+                                    EIR_vector, model_param_list)
+{
 
   ## population demographics
   age <- age_vector * model_param_list$DY
@@ -71,9 +72,13 @@ equilibrium_init_multi <- function (age_vector, het_brackets,
     temp_cov <- cov[,i]
     temp_param_list$cov <- temp_cov
 
-    init_single <- equilibrium_init_create(age_vector = age_vector, het_brackets=het_brackets,
-                                           country = NULL, admin_unit = NULL, ft= ft,
-                                           EIR=EIR_vector[i], model_param_list = temp_param_list)
+    init_single <- equilibrium_init_create(age_vector = age_vector,
+                                           het_brackets = het_brackets,
+                                           country = country,
+                                           admin_unit = admin_unit,
+                                           ft = ft,
+                                           EIR = EIR_vector[i],
+                                           model_param_list = temp_param_list)
 
 
 
