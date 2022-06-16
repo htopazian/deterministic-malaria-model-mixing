@@ -55,7 +55,15 @@ equilibrium_init_multi <- function (age_vector, het_brackets,
   PL <- vector(mode="numeric", length=np)
   EL <- vector(mode="numeric", length=np)
   LL <- vector(mode="numeric", length=np)
-
+  # Create 1 dimension array for seasonality initial condition
+  ssa0 <- vector(mode="numeric", length=np)
+  ssa1 <- vector(mode="numeric", length=np)
+  ssa2 <- vector(mode="numeric", length=np)
+  ssa3 <- vector(mode="numeric", length=np)
+  ssb1 <- vector(mode="numeric", length=np)
+  ssb2 <- vector(mode="numeric", length=np)
+  ssb3 <- vector(mode="numeric", length=np)
+  theta_c <- vector(mode="numeric", length=np)
 
   # Parameters that now need an extra dimension
   mv0 <- vector(mode="numeric", length=np)
@@ -74,8 +82,8 @@ equilibrium_init_multi <- function (age_vector, het_brackets,
 
     init_single <- equilibrium_init_create(age_vector = age_vector,
                                            het_brackets = het_brackets,
-                                           country = country,
-                                           admin_unit = admin_unit,
+                                           country = country[i],
+                                           admin_unit = admin_unit[i],
                                            ft = ft,
                                            EIR = EIR_vector[i],
                                            model_param_list = temp_param_list)
@@ -105,6 +113,14 @@ equilibrium_init_multi <- function (age_vector, het_brackets,
     FOIv_eq[i] <- init_single$FOIv_eq
     FOIvij_eq[,,i] <- init_single$FOIvij_eq
 
+    ssa0[i] <- init_single$ssa0
+    ssa1[i] <- init_single$ssa1
+    ssa2[i] <- init_single$ssa2
+    ssa3[i] <- init_single$ssa3
+    ssb1[i] <- init_single$ssb1
+    ssb2[i] <- init_single$ssb2
+    ssb3[i] <- init_single$ssb3
+    theta_c[i] <- init_single$theta_c
 
   }
 
@@ -133,6 +149,15 @@ equilibrium_init_multi <- function (age_vector, het_brackets,
   init_single$EIR_eq = EIR_eq
   init_single$FOIv_eq = FOIv_eq
   init_single$FOIvij_eq = FOIvij_eq
+
+  init_single$ssa0 = ssa0
+  init_single$ssa1 = ssa1
+  init_single$ssa2 = ssa2
+  init_single$ssa3 = ssa3
+  init_single$ssb1 = ssb1
+  init_single$ssb2 = ssb2
+  init_single$ssb3 = ssb3
+  init_single$theta_c = theta_c
 
   init_single$np = np
   init_single$cov = cov

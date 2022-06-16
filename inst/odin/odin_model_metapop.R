@@ -254,6 +254,8 @@ output(Ivout[]) <- Iv[i]
 dim(Ivout) <- np
 
 output(omega) <- omega
+
+
 ##------------------------------------------------------------------------------
 ##########################
 ## SEASONALITY FUNCTION ##
@@ -264,17 +266,29 @@ output(omega) <- omega
 pi <- user() # weird quirk, need to pass pi
 
 # The parameters for the fourier series
-ssa0 <- user()
-ssa1 <- user()
-ssa2 <- user()
-ssa3 <- user()
-ssb1 <- user()
-ssb2 <- user()
-ssb3 <- user()
-theta_c <- user()
+dim(ssa0) <- np
+dim(ssa1) <- np
+dim(ssa2) <- np
+dim(ssa3) <- np
+dim(ssb1) <- np
+dim(ssb2) <- np
+dim(ssb3) <- np
+dim(theta_c) <- np
+
+ssa0[] <- user()
+ssa1[] <- user()
+ssa2[] <- user()
+ssa3[] <- user()
+ssb1[] <- user()
+ssb2[] <- user()
+ssb3[] <- user()
+theta_c[] <- user()
+
 # Recreation of the rainfall function
-theta2 <- if(ssa0 == 0 && ssa1  == 0 && ssa2  == 0 && ssb1  == 0 && ssb2  == 0 && ssb3  == 0 && theta_c  == 0)
-  1 else max((ssa0+ssa1*cos(2*pi*t/365)+ssa2*cos(2*2*pi*t/365)+ssa3*cos(3*2*pi*t/365)+ssb1*sin(2*pi*t/365)+ssb2*sin(2*2*pi*t/365)+ ssb3*sin(3*2*pi*t/365) ) /theta_c,0.001)
+dim(theta2) <- np
+
+theta2[] <- if(ssa0[i] == 0 && ssa1[i]  == 0 && ssa2[i]  == 0 && ssb1[i]  == 0 && ssb2[i]  == 0 && ssb3[i]  == 0 && theta_c[i]  == 0)
+  1 else max((ssa0[i]+ssa1[i]*cos(2*pi*t/365)+ssa2[i]*cos(2*2*pi*t/365)+ssa3[i]*cos(3*2*pi*t/365)+ssb1[i]*sin(2*pi*t/365)+ssb2[i]*sin(2*2*pi*t/365)+ ssb3[i]*sin(3*2*pi*t/365) ) /theta_c[i],0.001)
 
 ##------------------------------------------------------------------------------
 #####################
@@ -412,7 +426,7 @@ K0[] <- 2*mv0[i]*dLL*mu0*(1+dPL*muPL)*gammaL*(lambda[i]+1)/(lambda[i]/(muLL*dEL)
 
 # Seasonal carrying capacity KL = base carrying capacity K0 * effect for time of year theta:
 dim(KL) <- np
-KL[] <- K0[i]*theta2
+KL[] <- K0[i]*theta2[i]
 dim(fv) <- np
 fv[] <- 1/( tau1/(1-zbar[i]) + tau2 ) # mosquito feeding rate (zbar from intervention param.)
 dim(mu) <- np
@@ -450,18 +464,20 @@ deriv(PL[1:np]) <- LL[i]/dLL - muPL*PL[i] - PL[i]/dPL
 # See supplementary materials S2 from http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1000324#s6
 
 # general parameters
+dim(ITN_on) <- np
+dim(IRS_on) <- np
 dim(itn_cov) <- np
 dim(irs_cov) <- np
 
 
-ITN_on <- user() # days after which ITN intervention begins
-IRS_on <- user() # days after which IRS intervention begins
+ITN_on[] <- user() # days after which ITN intervention begins
+IRS_on[] <- user() # days after which IRS intervention begins
 num_int <- user() # number of intervention categories, ITN only, IRS only, neither, both
 itn_cov[] <- user() # proportion of population covered by ITN
 irs_cov[] <- user() # proportion of population covered by IRS
 
 # cov is a vector of coverages for each intervention category:
-dim(cov_) <- c(4,np)
+dim(cov_) <- c(4, np)
 cov_[1,] <- (1-itn_cov[j])*(1-irs_cov[j])  # {No intervention}
 cov_[2,] <- itn_cov[j]*(1-irs_cov[j]) # 	   {ITN only}
 cov_[3,] <- (1-itn_cov[j])*irs_cov[j]	#      {IRS only}
@@ -492,56 +508,66 @@ irs_loss <- user()
 itn_loss <- user()
 
 # Calculates decay for ITN/IRS
-ITN_decay = if(t < ITN_on) 0 else exp(-((t-ITN_on)%%ITN_interval) * itn_loss)
-IRS_decay = if(t < IRS_on) 0 else exp(-((t-IRS_on)%%IRS_interval) * irs_loss)
+dim(ITN_decay) <- np
+dim(IRS_decay) <- np
+
+ITN_decay[] = if(t < ITN_on[i]) 0 else exp(-((t-ITN_on[i])%%ITN_interval) * itn_loss)
+IRS_decay[] = if(t < IRS_on[i]) 0 else exp(-((t-IRS_on[i])%%IRS_interval) * irs_loss)
 
 # The r,d and s values turn on after ITN_on or IRS_on and decay accordingly
-d_ITN <- if(t < ITN_on) 0 else d_ITN0*ITN_decay
-r_ITN <- if(t < ITN_on) 0 else r_ITN1 + (r_ITN0 - r_ITN1)*ITN_decay
-s_ITN <- if(t < ITN_on) 1 else 1 - d_ITN - r_ITN
+dim(d_ITN) <- np
+dim(r_ITN) <- np
+dim(s_ITN) <- np
+dim(r_IRS) <- np
+dim(d_IRS) <- np
+dim(s_IRS) <- np
 
-r_IRS <- if(t < IRS_on) 0 else r_IRS0*IRS_decay
-d_IRS <- if(t < IRS_on) 0 else chi*d_IRS0*IRS_decay
-s_IRS <- if(t < IRS_on) 1 else 1 - d_IRS
+d_ITN[] <- if(t < ITN_on[i]) 0 else d_ITN0*ITN_decay[i]
+r_ITN[] <- if(t < ITN_on[i]) 0 else r_ITN1 + (r_ITN0 - r_ITN1)*ITN_decay[i]
+s_ITN[] <- if(t < ITN_on[i]) 1 else 1 - d_ITN[i] - r_ITN[i]
+
+r_IRS[] <- if(t < IRS_on[i]) 0 else r_IRS0*IRS_decay[i]
+d_IRS[] <- if(t < IRS_on[i]) 0 else chi*d_IRS0*IRS_decay[i]
+s_IRS[] <- if(t < IRS_on[i]) 1 else 1 - d_IRS[i]
 
 # probability that mosquito bites and survives for each intervention category
-dim(w_) <-np # c(4,np)
-w_[1] <- 1
-w_[2] <- 1 - bites_Bed + bites_Bed*s_ITN
-w_[3] <- 1 - bites_Indoors + bites_Indoors*(1-r_IRS)*s_IRS
-w_[4] <- 1 - bites_Indoors + bites_Bed*(1-r_IRS)*s_ITN*s_IRS + (bites_Indoors - bites_Bed)*(1-r_IRS)*s_IRS
-w[] <- w_[i]
-dim(w) <- num_int
+dim(w_) <- c(4, np)
+w_[1,] <- 1
+w_[2,] <- 1 - bites_Bed + bites_Bed*s_ITN[j]
+w_[3,] <- 1 - bites_Indoors + bites_Indoors*(1-r_IRS[j])*s_IRS[j]
+w_[4,] <- 1 - bites_Indoors + bites_Bed*(1-r_IRS[j])*s_ITN[j]*s_IRS[j] + (bites_Indoors - bites_Bed)*(1-r_IRS[j])*s_IRS[j]
+w[,] <- w_[i,j]
+dim(w) <- c(num_int, np)
 
 # probability that mosq feeds during a single attempt for each int. cat.
-dim(yy_) <- 4
-yy_[1] <- 1
-yy_[2] <- w_[2]
-yy_[3] <- 1 - bites_Indoors + bites_Indoors*(1-r_IRS)
-yy_[4] <- 1 - bites_Indoors + bites_Bed*(1-r_IRS)*s_ITN + (bites_Indoors - bites_Bed)*(1-r_IRS)
-yy[] <- yy_[i]
-dim(yy) <- num_int
+dim(yy_) <- c(4, np)
+yy_[1,] <- 1
+yy_[2,] <- w_[2,i]
+yy_[3,] <- 1 - bites_Indoors + bites_Indoors*(1-r_IRS[j])
+yy_[4,] <- 1 - bites_Indoors + bites_Bed*(1-r_IRS[j])*s_ITN[j] + (bites_Indoors - bites_Bed)*(1-r_IRS[j])
+yy[,] <- yy_[i,j]
+dim(yy) <- c(num_int, np)
 
 # probability that mosquito is repelled during a single attempt for each int. cat.
-dim(z_) <- 4
-z_[1] <- 0
-z_[2] <- bites_Bed*r_ITN
-z_[3] <- bites_Indoors*r_IRS
-z_[4] <- bites_Bed*(r_IRS+ (1-r_IRS)*r_ITN) + (bites_Indoors - bites_Bed)*r_IRS
-z[] <- z_[i]
-dim(z) <- num_int
+dim(z_) <- c(4, np)
+z_[1,] <- 0
+z_[2,] <- bites_Bed*r_ITN[j]
+z_[3,] <- bites_Indoors*r_IRS[j]
+z_[4,] <- bites_Bed*(r_IRS[j]+ (1-r_IRS[j])*r_ITN[j]) + (bites_Indoors - bites_Bed)*r_IRS[j]
+z[,] <- z_[i,j]
+dim(z) <- c(num_int, np)
 
 # Calculating Z (zbar) and W (wbar) - see Supplementary materials 2 for details
 dim(zhi) <- c(num_int,np)
 dim(whi) <- c(num_int,np)
-zhi[1:num_int,1:np] <- cov[i,j]*z[i]
-whi[1:num_int,1:np] <- cov[i,j]*w[i]
+zhi[1:num_int,1:np] <- cov[i,j]*z[i,j]
+whi[1:num_int,1:np] <- cov[i,j]*w[i,j]
 dim(zh) <- np
 dim(wh) <- np
-zh[1:np] <- if(t < ITN_on) 0 else sum(zhi[,i])
-wh[1:np] <- if(t < ITN_on) 1 else sum(whi[,i])
-zh[1:np] <- if(t < IRS_on) 0 else sum(zhi[,i])
-wh[1:np] <- if(t < IRS_on) 1 else sum(whi[,i])
+zh[1:np] <- if(t < ITN_on[i]) 0 else sum(zhi[,i])
+wh[1:np] <- if(t < ITN_on[i]) 1 else sum(whi[,i])
+zh[1:np] <- if(t < IRS_on[i]) 0 else sum(zhi[,i])
+wh[1:np] <- if(t < IRS_on[i]) 1 else sum(whi[,i])
 # Z (zbar) - average probability of mosquito trying again during single feeding attempt
 dim(zbar) <- np
 zbar[1:np] <- Q0*zh[i]
@@ -558,10 +584,10 @@ dim(av) <- np
 av[1:np] <- fv[i]*Q[i] # biting rate on humans
 
 dim(av_mosq) <- c(num_int,np)
-av_mosq[1:num_int,1:np] <- av[j]*w[i]/wh[j] # rate at which mosquitoes bite each int. cat.
+av_mosq[1:num_int,1:np] <- av[j]*w[i,j]/wh[j] # rate at which mosquitoes bite each int. cat.
 
 dim(av_human) <- c(num_int,np)
-av_human[1:num_int,1:np] <- av[j]*yy[i]/wh[j] # biting rate on humans in each int. cat.
+av_human[1:num_int,1:np] <- av[j]*yy[i,j]/wh[j] # biting rate on humans in each int. cat.
 
 ##------------------------------------------------------------------------------
 ###################
@@ -625,11 +651,11 @@ output(KL[]) <- KL
 output(mv[]) <- mv
 output(Q[]) <- Q
 output(wh[]) <- wh
-output(d_ITN) <- d_ITN
-output(r_ITN) <- r_ITN
-output(s_ITN) <- s_ITN
-output(d_IRS) <- d_IRS
-output(r_IRS) <- r_IRS
-output(s_IRS) <- s_IRS
+output(d_ITN[]) <- d_ITN
+output(r_ITN[]) <- r_ITN
+output(s_ITN[]) <- s_ITN
+output(d_IRS[]) <- d_IRS
+output(r_IRS[]) <- r_IRS
+output(s_IRS[]) <- s_IRS
 output(cov[,]) <- cov
 output(K0[]) <- K0

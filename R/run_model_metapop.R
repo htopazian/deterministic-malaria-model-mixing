@@ -35,7 +35,7 @@ run_model_metapop <- function(model = "odin_model_metapop",
   np <- length(init_EIR)
 
   ## create model param list using necessary variables
-  xx <- model_param_list_create_metapop (np = np,...)
+  xx <- model_param_list_create_metapop (np = np, ...)
 
   # generate initial state variables from equilibrium solution
 
