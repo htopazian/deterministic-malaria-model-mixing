@@ -542,7 +542,7 @@ dim(w) <- c(num_int, np)
 # probability that mosq feeds during a single attempt for each int. cat.
 dim(yy_) <- c(4, np)
 yy_[1,] <- 1
-yy_[2,] <- w_[2,i]
+yy_[2,] <- w_[2,j]
 yy_[3,] <- 1 - bites_Indoors + bites_Indoors*(1-r_IRS[j])
 yy_[4,] <- 1 - bites_Indoors + bites_Bed*(1-r_IRS[j])*s_ITN[j] + (bites_Indoors - bites_Bed)*(1-r_IRS[j])
 yy[,] <- yy_[i,j]

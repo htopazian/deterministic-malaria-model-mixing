@@ -20685,7 +20685,7 @@ void odin_model_metapop_rhs(odin_model_metapop_internal* internal, double t, dou
     {
        int i = 2;
        for (int j = 1; j <= internal->dim_yy__2; ++j) {
-         internal->delay_array_yy_[i - 1 + internal->dim_yy__1 * (j - 1)] = internal->delay_array_w_[internal->dim_w__1 * (i - 1) + 1];
+         internal->delay_array_yy_[i - 1 + internal->dim_yy__1 * (j - 1)] = internal->delay_array_w_[internal->dim_w__1 * (j - 1) + 1];
        }
     }
     {
@@ -21586,7 +21586,7 @@ void odin_model_metapop_rhs(odin_model_metapop_internal* internal, double t, dou
   {
      int i = 2;
      for (int j = 1; j <= internal->dim_yy__2; ++j) {
-       internal->yy_[i - 1 + internal->dim_yy__1 * (j - 1)] = internal->w_[internal->dim_w__1 * (i - 1) + 1];
+       internal->yy_[i - 1 + internal->dim_yy__1 * (j - 1)] = internal->w_[internal->dim_w__1 * (j - 1) + 1];
      }
   }
   {
@@ -21973,7 +21973,7 @@ void odin_model_metapop_output_dde(size_t n_eq, double t, double * state, size_t
     {
        int i = 2;
        for (int j = 1; j <= internal->dim_yy__2; ++j) {
-         internal->delay_array_yy_[i - 1 + internal->dim_yy__1 * (j - 1)] = internal->delay_array_w_[internal->dim_w__1 * (i - 1) + 1];
+         internal->delay_array_yy_[i - 1 + internal->dim_yy__1 * (j - 1)] = internal->delay_array_w_[internal->dim_w__1 * (j - 1) + 1];
        }
     }
     {
